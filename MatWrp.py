@@ -27,10 +27,23 @@ class MatWrp(object):
         return newWrp
 
     def width(self):
-        return self.mat.shape[1]
+        if self.transpose == False:
+            return self.mat.shape[1]
+        else:
+            return self.mat.shape[0]
+    
+    def col(self):
+        return self.mat.shape[0]
 
     def height(self):
-        return self.mat.shape[0]
+        if self.transpose == False:
+            return self.mat.shape[0]
+        else:
+            return self.mat.shape[1]
+    
+    def row(self):
+        return self.mat.shape[1]
+
 
     def transpose(self):
         self.transpose = not self.transpose
