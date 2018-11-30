@@ -105,4 +105,18 @@ class Core(object):
         out.set_orientation(fromWrp)
         for row in range(fromWrp.height()):
             pool = []
-            
+            for seam in seams:
+                pool.append(seam[fromWrp.mat.height() - row - 1])
+            pool.sort()
+            delta = 0
+            curr_pix = 0
+            for col in range(fromWrp.width()):
+                if curr_pix < len(pool) and col == pool[curr_pix]:
+                    curr_pix += 1
+                    if delete_mode == True:
+                        delta += -1
+                    else:
+                        delta += 1
+                    out.mat[row][col + delta - 1] = fromWrp[row][col]
+                out.mat[row][col + delta] = fromWrp.mat[row][col]
+        fromWrp = out
