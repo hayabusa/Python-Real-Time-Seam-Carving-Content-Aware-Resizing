@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from MatWrp import MatWrp
+from matWrp import MatWrp
 
 class Core(object):
     def get_w(self, optimum_energy, seam_energy, i, j, row):
