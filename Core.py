@@ -18,13 +18,13 @@ class Core(object):
         seams = [[] for i in range(energy.width())]
         for i in range(energy.width()):
             seam_energy.mat[0][i] = energy.mat[0][i]
-            seams[i].reverse()
             seams[i].append(i)
 
         matches = [[] for i in range(energy.width())]
         for row in range(energy.height() - 1):
             self.calc_matches(energy, optimum_energy, seam_energy, matches, row)
             self.increase_seams(energy, optimum_energy, matches, seam_energy, seams, row)
+
 
         weighted_seams = []
         for i in range(len(seams)):
@@ -33,7 +33,7 @@ class Core(object):
         weighted_seams.sort(key=lambda x:x[0])
 
         res = []
-        for i in range(len(weighted_seams)):
+        for i in range(k):
             res.append(weighted_seams[i][1])
 
         return res
@@ -61,8 +61,10 @@ class Core(object):
     def calc_optimum_dynamics(self, inwrp, dynamics):
         h = inwrp.height()
         w = inwrp.width()
-
+        print(h,w)
+        # h,w=w,h
         for i in range(w):
+            # print(i)
             dynamics.mat[h - 1][i] = inwrp.mat[h - 1][i]
 
         for curr_row in range(h - 2, -1, -1):
@@ -79,11 +81,10 @@ class Core(object):
 
                 dynamics.mat[curr_row][curr_col] = curr_min
 
+
     def calc_matches(self, energy, optimum_energy, seam_energy, matches, row):
         matches[0] = self.get_w(optimum_energy, seam_energy, 0, 0, row)
-        matches[1] = max(matches[0] + self.get_w(optimum_energy, seam_energy, 1, 1, row),
-                                  self.get_w(optimum_energy, seam_energy, 0, 1, row) +
-                                  self.get_w(optimum_energy, seam_energy, 1, 0, row))
+        matches[1] = max(matches[0] + self.get_w(optimum_energy, seam_energy, 1, 1, row), self.get_w(optimum_energy, seam_energy, 0, 1, row) + self.get_w(optimum_energy, seam_energy, 1, 0, row))
 
         for col in range(2, energy.width()):
             w1 = matches[col - 1] + self.get_w(optimum_energy, seam_energy, col, col, row)
@@ -98,15 +99,19 @@ class Core(object):
             w_delta =  len(seams)
         out = MatWrp()
         if fromWrp.transpose == True:
-            out.blank_image(fromWrp.mat.row() + w_delta, fromWrp.mat.col(), fromWrp.mat.dtype)
+            out.blank_image(fromWrp.row() + w_delta, fromWrp.col(), fromWrp.mat.dtype)
+            out.mat = fromWrp.mat.copy()[:fromWrp.row() + w_delta][:fromWrp.col()]
         else:
-            out.blank_image(fromWrp.mat.row(), fromWrp.mat.col() + w_delta, fromWrp.mat.dtype)
-
+            out.blank_image(fromWrp.row(), fromWrp.col() + w_delta, fromWrp.mat.dtype)
+            out.mat = fromWrp.mat.copy()[:fromWrp.row()][:fromWrp.col() + w_delta]
         out.set_orientation(fromWrp)
+        
+        print(fromWrp.mat.shape)
+        print(out.mat.shape)
         for row in range(fromWrp.height()):
             pool = []
             for seam in seams:
-                pool.append(seam[fromWrp.mat.height() - row - 1])
+                pool.append(seam[fromWrp.height() - row - 1])
             pool.sort()
             delta = 0
             curr_pix = 0
@@ -117,6 +122,12 @@ class Core(object):
                         delta += -1
                     else:
                         delta += 1
-                    out.mat[row][col + delta - 1] = fromWrp[row][col]
-                out.mat[row][col + delta] = fromWrp.mat[row][col]
+                    if row > 271:
+                        break
+                    out.mat[row][col + delta - 1] = fromWrp.mat[row][col]
+                out.mat[row][col + delta] = fromWrp.mat[row][col] 
+        print(out.mat)
+        cv2.imshow('result',out.mat)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         fromWrp = out

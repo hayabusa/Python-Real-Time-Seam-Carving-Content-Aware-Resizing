@@ -8,7 +8,7 @@ class MatWrp(object):
     def blank_image(self, width, height, type = np.float64):
         """Create new image(numpy array) filled with certain color in RGB"""
         # Create black blank image
-        self.mat = np.zeros((height, width), np.float64)
+        self.mat = np.zeros((height, width, 3), np.float64)
         self.transpose = False
 
     def copy_image(self, image):
@@ -33,7 +33,7 @@ class MatWrp(object):
             return self.mat.shape[0]
     
     def col(self):
-        return self.mat.shape[0]
+        return self.mat.shape[1]
 
     def height(self):
         if self.transpose == False:
@@ -42,7 +42,7 @@ class MatWrp(object):
             return self.mat.shape[1]
     
     def row(self):
-        return self.mat.shape[1]
+        return self.mat.shape[0]
 
 
     def transpose(self):
