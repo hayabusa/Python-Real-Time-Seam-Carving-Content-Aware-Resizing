@@ -1,3 +1,5 @@
+NOT READY YET
+
 ### About
 This is an implementation of the 
 [real time content aware resize](https://link.springer.com/article/10.1007/s11432-009-0041-9)
