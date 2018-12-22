@@ -1,9 +1,7 @@
 NOT READY YET
 
 ### About
-This is an implementation of the 
-[real time content aware resize](https://link.springer.com/article/10.1007/s11432-009-0041-9)
-algorithm with Mask and Face Detection Functions.
+This is an implementation of the the algorithm with Mask and Face Detection Functions.
 Project implemented in  ```Python```, which provide resize services.
 
 ### Example
